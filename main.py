@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request, render_template_string
+from flask import Flask, request, render_template_string
 import os
 
 app = Flask(__name__)
@@ -15,7 +15,14 @@ def index():
 
 @app.route('/square', methods=['POST'])
 def square():
-    number = int(request.form['number'])
+    number_str = request.form['number']
+    if not number_str.isdigit():
+        return render_template_string('''
+            <p>Por favor, ingrese un número válido.</p>
+            <a href="/">Intentar de nuevo</a>
+        ''')
+    
+    number = int(number_str)
     result = number ** 2
     return render_template_string('''
         <p>El cuadrado de {{ number }} es {{ result }}.</p>
